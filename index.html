@@ -46,24 +46,15 @@
 </head>
 <body>
   <div class="box">
-    <h2 id="title">Forgot Password</h2>
-
-    <div id="requestReset">
-      <input type="email" id="email" placeholder="Enter your email" />
-      <button onclick="sendResetEmail()">Send Reset Email</button>
-    </div>
-
-    <div id="confirmReset" style="display: none;">
-      <input type="password" id="newPassword" placeholder="Enter new password" />
-      <button onclick="resetPassword()">Reset Password</button>
-    </div>
-
+    <h2>Set New Password</h2>
+    <input type="password" id="newPassword" placeholder="Enter new password" />
+    <button onclick="resetPassword()">Reset Password</button>
     <p id="message"></p>
   </div>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
-    import { getAuth, sendPasswordResetEmail, confirmPasswordReset } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
+    import { getAuth, confirmPasswordReset } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
 
     const firebaseConfig = {
       apiKey: 'AIzaSyB_dXkRmGko4hrYBoggYwwy_zOz_DYz9QU',
@@ -81,30 +72,12 @@
     const urlParams = new URLSearchParams(window.location.search);
     const oobCode = urlParams.get("oobCode");
 
-    const requestReset = document.getElementById("requestReset");
-    const confirmReset = document.getElementById("confirmReset");
-    const title = document.getElementById("title");
     const message = document.getElementById("message");
 
-    if (oobCode) {
-      requestReset.style.display = "none";
-      confirmReset.style.display = "block";
-      title.textContent = "Set New Password";
+    if (!oobCode) {
+      message.textContent = "❌ Invalid reset link.";
+      message.style.color = "red";
     }
-
-    window.sendResetEmail = async function () {
-      const email = document.getElementById("email").value;
-      try {
-        await sendPasswordResetEmail(auth, email, {
-          url: window.location.href.split('?')[0] // Current page without query
-        });
-        message.textContent = "✅ Reset email sent!";
-        message.style.color = "green";
-      } catch (error) {
-        message.textContent = "❌ " + error.message;
-        message.style.color = "red";
-      }
-    };
 
     window.resetPassword = async function () {
       const newPassword = document.getElementById("newPassword").value;
