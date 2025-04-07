@@ -355,7 +355,7 @@
       </div>
     </div>
     
-    <a href="https://inkchat.app" class="back-link">← Back to login</a>
+    <a href="inkchat://login" id="backLink" class="back-link">← Back to login</a>
   </div>
 
   <script type="module">
@@ -389,6 +389,30 @@
     const togglePassword = document.getElementById("togglePassword");
     const lengthCheck = document.getElementById("lengthCheck");
     const strengthCheck = document.getElementById("strengthCheck");
+    const backLink = document.getElementById("backLink");
+    
+    // Set up app deep linking for mobile
+    function setupDeepLinking() {
+      // Check if the user is on iOS
+      const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+      
+      // Check if the user is on Android
+      const isAndroid = /android/i.test(navigator.userAgent);
+      
+      if (isIOS) {
+        // iOS uses custom URL scheme and universal links
+        backLink.href = "inkchat://login";
+      } else if (isAndroid) {
+        // Android uses intent scheme for better compatibility
+        backLink.href = "intent://login#Intent;scheme=inkchat;package=com.inkchat.app;end";
+      } else {
+        // Fallback to web if not on mobile
+        backLink.href = "https://inkchat.app";
+      }
+    }
+    
+    // Call deeplink setup on page load
+    setupDeepLinking();
     
     // Validate the reset code
     if (!oobCode) {
@@ -461,6 +485,14 @@
           
           // Show success message
           showMessage("Password reset successful! You can now log in with your new password.", "success");
+          
+          // Offer to open the app after successful reset
+          setTimeout(() => {
+            if (confirm("Password reset successful! Would you like to open the InkChat app now?")) {
+              // Use the same deep link as the back button
+              window.location.href = backLink.href;
+            }
+          }, 1500);
           
           // Clear the form
           passwordInput.value = "";
