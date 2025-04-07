@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Reset Password</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #f9f9f9;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .box {
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+      width: 300px;
+    }
+    h2 {
+      margin-bottom: 20px;
+    }
+    input {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
+    button {
+      padding: 10px;
+      width: 100%;
+      background: #007bff;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    #message {
+      margin-top: 15px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="box">
+    <h2 id="title">Forgot Password</h2>
+
+    <div id="requestReset">
+      <input type="email" id="email" placeholder="Enter your email" />
+      <button onclick="sendResetEmail()">Send Reset Email</button>
+    </div>
+
+    <div id="confirmReset" style="display: none;">
+      <input type="password" id="newPassword" placeholder="Enter new password" />
+      <button onclick="resetPassword()">Reset Password</button>
+    </div>
+
+    <p id="message"></p>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+    import { getAuth, sendPasswordResetEmail, confirmPasswordReset } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: 'AIzaSyB_dXkRmGko4hrYBoggYwwy_zOz_DYz9QU',
+      appId: '1:575156195444:android:04c0bb4f3d37d88109c121',
+      messagingSenderId: '575156195444',
+      projectId: 'chat-97839',
+      storageBucket: 'chat-97839.firebasestorage.app',
+      databaseURL: 'https://chat-97839-default-rtdb.firebaseio.com',
+      authDomain: 'chat-97839.firebaseapp.com'
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const oobCode = urlParams.get("oobCode");
+
+    const requestReset = document.getElementById("requestReset");
+    const confirmReset = document.getElementById("confirmReset");
+    const title = document.getElementById("title");
+    const message = document.getElementById("message");
+
+    if (oobCode) {
+      requestReset.style.display = "none";
+      confirmReset.style.display = "block";
+      title.textContent = "Set New Password";
+    }
+
+    window.sendResetEmail = async function () {
+      const email = document.getElementById("email").value;
+      try {
+        await sendPasswordResetEmail(auth, email, {
+          url: window.location.href.split('?')[0] // Current page without query
+        });
+        message.textContent = "✅ Reset email sent!";
+        message.style.color = "green";
+      } catch (error) {
+        message.textContent = "❌ " + error.message;
+        message.style.color = "red";
+      }
+    };
+
+    window.resetPassword = async function () {
+      const newPassword = document.getElementById("newPassword").value;
+      try {
+        await confirmPasswordReset(auth, oobCode, newPassword);
+        message.textContent = "✅ Password has been reset!";
+        message.style.color = "green";
+      } catch (error) {
+        message.textContent = "❌ " + error.message;
+        message.style.color = "red";
+      }
+    };
+  </script>
+</body>
+</html>
