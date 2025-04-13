@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Reset Password</title>
+  <title>Account Management</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     :root {
@@ -264,6 +264,24 @@
       color: var(--primary);
     }
 
+    .verification-container {
+      text-align: center;
+      padding: 20px;
+    }
+
+    .verification-icon {
+      font-size: 64px;
+      color: var(--primary);
+      margin-bottom: 24px;
+    }
+
+    .verification-loading {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+    }
+
     @media (max-width: 480px) {
       .card-header, .card-body {
         padding-left: 24px;
@@ -287,6 +305,15 @@
       display: none;
     }
 
+    .large-spinner {
+      width: 40px;
+      height: 40px;
+      border: 3px solid rgba(67, 97, 238, 0.3);
+      border-radius: 50%;
+      border-top-color: var(--primary);
+      animation: spin 1s linear infinite;
+    }
+
     @keyframes spin {
       to {
         transform: rotate(360deg);
@@ -295,6 +322,10 @@
 
     .button.loading .spinner {
       display: inline-block;
+    }
+
+    #passwordResetSection, #emailVerificationSection {
+      display: none;
     }
   </style>
 </head>
@@ -310,60 +341,108 @@
       <div class="decoration decoration-1"></div>
       <div class="decoration decoration-2"></div>
       
-      <div class="card-header">
-        <h1>Reset Your Password</h1>
-        <p class="subtitle">Please enter a new secure password for your account</p>
+      <!-- Loading State -->
+      <div id="loadingSection" class="verification-container">
+        <div class="verification-loading">
+          <div class="large-spinner"></div>
+          <h1>Processing...</h1>
+          <p class="subtitle">Please wait while we verify your request</p>
+        </div>
       </div>
       
-      <div class="card-body">
-        <div class="form-group">
-          <label for="newPassword" class="form-label">New Password</label>
-          <div class="input-group">
-            <input 
-              type="password" 
-              id="newPassword" 
-              class="input-field" 
-              placeholder="Enter your new password" 
-              autocomplete="new-password"
-            />
-            <button type="button" class="input-icon" id="togglePassword">
-              <i class="far fa-eye-slash"></i>
-            </button>
-          </div>
-          
-          <div class="validation-feedback">
-            <div class="validation-item" id="lengthCheck">
-              <i class="fas fa-circle"></i>
-              <span>8+ characters</span>
-            </div>
-            <div class="validation-item" id="strengthCheck">
-              <i class="fas fa-circle"></i>
-              <span>Strong password</span>
-            </div>
-          </div>
+      <!-- Password Reset Section -->
+      <div id="passwordResetSection">
+        <div class="card-header">
+          <h1>Reset Your Password</h1>
+          <p class="subtitle">Please enter a new secure password for your account</p>
         </div>
         
-        <button id="resetBtn" class="button">
-          <span class="spinner"></span>
-          <span class="button-text">Set New Password</span>
-        </button>
+        <div class="card-body">
+          <div class="form-group">
+            <label for="newPassword" class="form-label">New Password</label>
+            <div class="input-group">
+              <input 
+                type="password" 
+                id="newPassword" 
+                class="input-field" 
+                placeholder="Enter your new password" 
+                autocomplete="new-password"
+              />
+              <button type="button" class="input-icon" id="togglePassword">
+                <i class="far fa-eye-slash"></i>
+              </button>
+            </div>
+            
+            <div class="validation-feedback">
+              <div class="validation-item" id="lengthCheck">
+                <i class="fas fa-circle"></i>
+                <span>8+ characters</span>
+              </div>
+              <div class="validation-item" id="strengthCheck">
+                <i class="fas fa-circle"></i>
+                <span>Strong password</span>
+              </div>
+            </div>
+          </div>
+          
+          <button id="resetBtn" class="button">
+            <span class="spinner"></span>
+            <span class="button-text">Set New Password</span>
+          </button>
+          
+          <div id="resetMessage" class="feedback-message">
+            <i class="fas fa-check-circle"></i>
+            <span id="resetMessageText"></span>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Email Verification Section -->
+      <div id="emailVerificationSection" class="verification-container">
+        <div id="verifyingEmail">
+          <div class="verification-icon">
+            <i class="fas fa-envelope"></i>
+          </div>
+          <h1>Verifying Your Email</h1>
+          <p class="subtitle">We're confirming your email address...</p>
+          <div class="large-spinner" style="margin: 20px auto;"></div>
+        </div>
         
-        <div id="message" class="feedback-message">
-          <i class="fas fa-check-circle"></i>
-          <span id="messageText"></span>
+        <div id="emailVerified" style="display: none;">
+          <div class="verification-icon">
+            <i class="fas fa-check-circle"></i>
+          </div>
+          <h1>Email Verified!</h1>
+          <p class="subtitle">Your email has been successfully verified. You can now access all features of your account.</p>
+          <button id="continueBtn" class="button" style="margin-top: 20px;">
+            Continue to App
+          </button>
+        </div>
+        
+        <div id="emailVerificationFailed" style="display: none;">
+          <div class="verification-icon" style="color: var(--error);">
+            <i class="fas fa-exclamation-circle"></i>
+          </div>
+          <h1>Verification Failed</h1>
+          <p class="subtitle" id="verificationErrorText">We couldn't verify your email address. The link may have expired or already been used.</p>
+          <button id="retryBtn" class="button" style="margin-top: 20px;">
+            Return to App
+          </button>
         </div>
       </div>
     </div>
     
-  
+    <a id="backLink" href="#" class="back-link">
+      <i class="fas fa-arrow-left"></i> Return to InkChat
+    </a>
   </div>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
-    import { getAuth, confirmPasswordReset } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
+    import { getAuth, confirmPasswordReset, applyActionCode, checkActionCode } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
     
     // Firebase configuration
-  const firebaseConfig = {
+    const firebaseConfig = {
       apiKey: 'AIzaSyCxa2v_NYFO4FPwTZr6UU5s4ym2NQ2uPQ0',
       appId: '1:748298667757:android:8cb8caa6a6b7ab7be32ee4',
       messagingSenderId: '748298667757',
@@ -377,19 +456,31 @@
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     
-    // Get reset code from URL
+    // Get action code from URL
     const urlParams = new URLSearchParams(window.location.search);
-    const oobCode = urlParams.get("oobCode");
+    const actionCode = urlParams.get("oobCode");
+    const mode = urlParams.get("mode");
     
     // DOM elements
-    const messageEl = document.getElementById("message");
-    const messageTextEl = document.getElementById("messageText");
+    const loadingSection = document.getElementById("loadingSection");
+    const passwordResetSection = document.getElementById("passwordResetSection");
+    const emailVerificationSection = document.getElementById("emailVerificationSection");
+    
+    const verifyingEmail = document.getElementById("verifyingEmail");
+    const emailVerified = document.getElementById("emailVerified");
+    const emailVerificationFailed = document.getElementById("emailVerificationFailed");
+    const verificationErrorText = document.getElementById("verificationErrorText");
+    
+    const resetMessageEl = document.getElementById("resetMessage");
+    const resetMessageTextEl = document.getElementById("resetMessageText");
     const passwordInput = document.getElementById("newPassword");
     const resetBtn = document.getElementById("resetBtn");
     const togglePassword = document.getElementById("togglePassword");
     const lengthCheck = document.getElementById("lengthCheck");
     const strengthCheck = document.getElementById("strengthCheck");
     const backLink = document.getElementById("backLink");
+    const continueBtn = document.getElementById("continueBtn");
+    const retryBtn = document.getElementById("retryBtn");
     
     // Set up app deep linking for mobile
     function setupDeepLinking() {
@@ -399,28 +490,115 @@
       // Check if the user is on Android
       const isAndroid = /android/i.test(navigator.userAgent);
       
+      const appLink = "inkchat://login";
+      
       if (isIOS) {
         // iOS uses custom URL scheme and universal links
-        backLink.href = "inkchat://login";
+        backLink.href = appLink;
+        if (continueBtn) continueBtn.addEventListener("click", () => window.location.href = appLink);
+        if (retryBtn) retryBtn.addEventListener("click", () => window.location.href = appLink);
       } else if (isAndroid) {
         // Android uses intent scheme for better compatibility
-        backLink.href = "intent://login#Intent;scheme=inkchat;package=com.inkchat.app;end";
+        const intentLink = "intent://login#Intent;scheme=inkchat;package=com.inkchat.app;end";
+        backLink.href = intentLink;
+        if (continueBtn) continueBtn.addEventListener("click", () => window.location.href = intentLink);
+        if (retryBtn) retryBtn.addEventListener("click", () => window.location.href = intentLink);
       } else {
         // Fallback to web if not on mobile
-        backLink.href = "https://inkchat.app";
+        const webLink = "https://inkchat.app";
+        backLink.href = webLink;
+        if (continueBtn) continueBtn.addEventListener("click", () => window.location.href = webLink);
+        if (retryBtn) retryBtn.addEventListener("click", () => window.location.href = webLink);
       }
     }
     
     // Call deeplink setup on page load
     setupDeepLinking();
     
-    // Validate the reset code
-    if (!oobCode) {
-      showMessage("Invalid password reset link. Please request a new one.", "error");
-      resetBtn.disabled = true;
+    // Check the action code and determine the type of action to perform
+    async function handleActionCode() {
+      if (!actionCode) {
+        showSection("error", "Invalid action code. Please request a new link.");
+        return;
+      }
+      
+      try {
+        // Check the action code to determine its purpose
+        const actionCodeInfo = await checkActionCode(auth, actionCode);
+        
+        // actionCodeInfo.operation will be one of:
+        // 'PASSWORD_RESET', 'VERIFY_EMAIL', 'RECOVER_EMAIL'
+        switch(actionCodeInfo.operation) {
+          case 'PASSWORD_RESET':
+            showSection("passwordReset");
+            break;
+          case 'VERIFY_EMAIL':
+            showSection("emailVerification");
+            verifyEmail();
+            break;
+          default:
+            showSection("error", "Unsupported action. Please return to the app.");
+            break;
+        }
+      } catch (error) {
+        showSection("error", getErrorMessage(error));
+      }
     }
     
-    // Password visibility toggle - Fixed visibility and event handling
+    // Show the appropriate section based on action type
+    function showSection(section, errorMessage = "") {
+      loadingSection.style.display = "none";
+      passwordResetSection.style.display = "none";
+      emailVerificationSection.style.display = "none";
+      
+      switch(section) {
+        case "passwordReset":
+          passwordResetSection.style.display = "block";
+          break;
+        case "emailVerification":
+          emailVerificationSection.style.display = "block";
+          verifyingEmail.style.display = "block";
+          emailVerified.style.display = "none";
+          emailVerificationFailed.style.display = "none";
+          break;
+        case "emailVerified":
+          emailVerificationSection.style.display = "block";
+          verifyingEmail.style.display = "none";
+          emailVerified.style.display = "block";
+          emailVerificationFailed.style.display = "none";
+          break;
+        case "emailVerificationFailed":
+          emailVerificationSection.style.display = "block";
+          verifyingEmail.style.display = "none";
+          emailVerified.style.display = "none";
+          emailVerificationFailed.style.display = "block";
+          if (errorMessage) {
+            verificationErrorText.textContent = errorMessage;
+          }
+          break;
+        case "error":
+          emailVerificationSection.style.display = "block";
+          verifyingEmail.style.display = "none";
+          emailVerified.style.display = "none";
+          emailVerificationFailed.style.display = "block";
+          if (errorMessage) {
+            verificationErrorText.textContent = errorMessage;
+          }
+          break;
+      }
+    }
+    
+    // Verify Email function
+    async function verifyEmail() {
+      try {
+        await applyActionCode(auth, actionCode);
+        showSection("emailVerified");
+      } catch (error) {
+        showSection("emailVerificationFailed", getErrorMessage(error));
+      }
+    }
+    
+    // Password visibility toggle
     togglePassword.addEventListener("click", function() {
       const type = passwordInput.getAttribute("type") === "password" ? "text" : "password";
       passwordInput.setAttribute("type", type);
@@ -481,10 +659,10 @@
           resetBtn.classList.add("loading");
           resetBtn.disabled = true;
           
-          await confirmPasswordReset(auth, oobCode, newPassword);
+          await confirmPasswordReset(auth, actionCode, newPassword);
           
           // Show success message
-          showMessage("Password reset successful! You can now log in with your new password.", "success");
+          showResetMessage("Password reset successful! You can now log in with your new password.", "success");
           
           // Offer to open the app after successful reset
           setTimeout(() => {
@@ -506,7 +684,7 @@
           
         } catch (error) {
           // Show error message
-          showMessage(getErrorMessage(error), "error");
+          showResetMessage(getErrorMessage(error), "error");
           
           // Reset button state
           resetBtn.classList.remove("loading");
@@ -515,13 +693,13 @@
       }
     });
     
-    // Helper to show messages
-    function showMessage(text, type) {
-      messageTextEl.textContent = text;
-      messageEl.className = `feedback-message ${type} show`;
+    // Helper to show messages for password reset
+    function showResetMessage(text, type) {
+      resetMessageTextEl.textContent = text;
+      resetMessageEl.className = `feedback-message ${type} show`;
       
       // Update icon
-      const icon = messageEl.querySelector("i");
+      const icon = resetMessageEl.querySelector("i");
       if (type === "success") {
         icon.className = "fas fa-check-circle";
       } else {
@@ -534,9 +712,9 @@
       const errorCode = error.code;
       switch (errorCode) {
         case 'auth/expired-action-code':
-          return 'This password reset link has expired. Please request a new one.';
+          return 'This link has expired. Please request a new one.';
         case 'auth/invalid-action-code':
-          return 'This password reset link is invalid. It may have been used already.';
+          return 'This link is invalid or has already been used.';
         case 'auth/user-disabled':
           return 'This account has been disabled. Please contact support.';
         case 'auth/user-not-found':
@@ -547,6 +725,9 @@
           return error.message || 'An error occurred. Please try again.';
       }
     }
+    
+    // Start the handling process
+    handleActionCode();
   </script>
 </body>
 </html>
