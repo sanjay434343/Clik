@@ -58,5 +58,4 @@ Clik is here! Store URLs locally and summarize content offline using NLP. It’s
 Get started with **Clik** today!
 ```
 
-
-This version is much shorter while still maintaining all the essential details. You can use this for your GitHub README or any terminal-based tasks.
+=
