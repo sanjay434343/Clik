@@ -18,19 +18,19 @@
 # ---
 # 💻 How to Use:
 # 1. Clone the Repository:
-#    ```bash
+#  
 #    git clone https://github.com/your-username/clik.git
-#    ```
+#    
 # 2. Install Dependencies:
 #    Navigate to the project directory and run:
-#    ```bash
+#   
 #    flutter pub get
-#    ```
+#    
 # 3. Run the App:
 #    Launch the app on your device or simulator:
-#    ```bash
+#   
 #    flutter run
-#    ```
+#    
 # 4. Add URLs: 
 #    Simply add URLs to the app's storage.
 # 5. Summarize Content: 
@@ -39,17 +39,17 @@
 # ---
 # 🔧 Setup Instructions:
 # 1. Clone the repository:
-#    ```bash
+#    
 #    git clone https://github.com/your-username/clik.git
-#    ```
+#    
 # 2. Install dependencies:
-#    ```bash
+#    
 #    flutter pub get
-#    ```
+#    
 # 3. Run the app:
-#    ```bash
+#    
 #    flutter run
-#    ```
+#    
 
 # ---
 # 📝 License:
