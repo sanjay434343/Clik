@@ -1,6 +1,3 @@
-Got it! Here's a more concise version of everything, keeping it short but still informative:
-
-```bash
 # **Clik - Local URL Storage & NLP Summarizer (Flutter)**
 
 Clik is a Flutter-based mobile app that stores URLs locally and summarizes their content offline using NLP. Perfect for quick access and summarization without an internet connection.
@@ -20,7 +17,7 @@ Clik is a Flutter-based mobile app that stores URLs locally and summarizes their
 1. Clone the repo: 
    ```bash
    git clone https://github.com/your-username/clik.git
-   ```
+
 2. Install dependencies:
    ```bash
    flutter pub get
@@ -61,3 +58,5 @@ Clik is here! Store URLs locally and summarize content offline using NLP. It’s
 Get started with **Clik** today!
 ```
 
+
+This version is much shorter while still maintaining all the essential details. You can use this for your GitHub README or any terminal-based tasks.
