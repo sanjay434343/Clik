@@ -1,0 +1,10 @@
+{
+  "name": "Clik",
+  "version": "1.0.0",
+  "description": "Clik is a Flutter-based app that stores URLs locally and summarizes their content offline using NLP. Fast, secure, and internet-free.",
+  "icon_url": "https://yourwebsite.com/ddroid/clik-icon.png",
+  "release": "https://github.com/sanjay434343/Clik/releases/tag/1.0.0",
+  "package_name": "com.example.clik",
+  "changelog": "Initial release: local URL storage, offline NLP summarization, cross-platform support.",
+  "category": "Productivity"
+}
